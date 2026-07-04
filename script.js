@@ -664,14 +664,13 @@ function drawEyes(cx, cy, R, isBlinking) {
 
 function drawItems() {
   for (const item of items) {
-    // 光輪：strokeStyle を beginPath より前にセット（モバイル対策）
-    ctx.strokeStyle = 'rgba(80, 210, 80, 0.55)';
-    ctx.lineWidth   = 2.5;
+    // 背景円（緑）：絵文字が消えても「アイテム」とわかるように必ず描く
+    ctx.fillStyle = 'rgba(60, 200, 60, 0.85)';
     ctx.beginPath();
-    ctx.arc(item.x, item.y, item.size / 2 + 5, 0, Math.PI * 2);
-    ctx.stroke();
+    ctx.arc(item.x, item.y, item.size / 2 + 4, 0, Math.PI * 2);
+    ctx.fill();
 
-    // 絵文字：fillStyle を明示することでモバイルでの色ズレを防ぐ
+    // 絵文字
     ctx.fillStyle    = '#222';
     ctx.font         = `${item.size}px serif`;
     ctx.textAlign    = 'center';
@@ -679,23 +678,22 @@ function drawItems() {
     ctx.fillText(item.type.emoji, item.x, item.y);
 
     // ラベル
-    ctx.fillStyle    = 'rgba(30, 140, 30, 0.9)';
-    ctx.font         = '10px sans-serif';
+    ctx.fillStyle    = 'rgba(20, 100, 20, 0.95)';
+    ctx.font         = 'bold 10px sans-serif';
     ctx.textBaseline = 'top';
-    ctx.fillText(item.type.label, item.x, item.y + item.size / 2 + 4);
+    ctx.fillText(item.type.label, item.x, item.y + item.size / 2 + 5);
   }
 }
 
 function drawObstacles() {
   for (const obs of obstacles) {
-    // 光輪：strokeStyle を beginPath より前にセット（モバイル対策）
-    ctx.strokeStyle = 'rgba(220, 60, 60, 0.55)';
-    ctx.lineWidth   = 2.5;
+    // 背景円（赤）：絵文字が消えても「障害物」とわかるように必ず描く
+    ctx.fillStyle = 'rgba(220, 50, 50, 0.85)';
     ctx.beginPath();
-    ctx.arc(obs.x, obs.y, obs.size / 2 + 5, 0, Math.PI * 2);
-    ctx.stroke();
+    ctx.arc(obs.x, obs.y, obs.size / 2 + 4, 0, Math.PI * 2);
+    ctx.fill();
 
-    // 絵文字：fillStyle を明示することでモバイルでの色ズレを防ぐ
+    // 絵文字
     ctx.fillStyle    = '#222';
     ctx.font         = `${obs.size}px serif`;
     ctx.textAlign    = 'center';
@@ -703,10 +701,10 @@ function drawObstacles() {
     ctx.fillText(obs.type.emoji, obs.x, obs.y);
 
     // ラベル
-    ctx.fillStyle    = 'rgba(180, 30, 30, 0.9)';
-    ctx.font         = '10px sans-serif';
+    ctx.fillStyle    = 'rgba(140, 20, 20, 0.95)';
+    ctx.font         = 'bold 10px sans-serif';
     ctx.textBaseline = 'top';
-    ctx.fillText(obs.type.label, obs.x, obs.y + obs.size / 2 + 4);
+    ctx.fillText(obs.type.label, obs.x, obs.y + obs.size / 2 + 5);
   }
 }
 
