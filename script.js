@@ -664,33 +664,55 @@ function drawEyes(cx, cy, R, isBlinking) {
 
 function drawItems() {
   for (const item of items) {
-    ctx.beginPath();
-    ctx.arc(item.x, item.y, item.size / 2 + 5, 0, Math.PI * 2);
+    ctx.save();
+
+    // 光輪（スタイルを beginPath より先にセット）
     ctx.strokeStyle = 'rgba(80, 210, 80, 0.55)';
     ctx.lineWidth   = 2.5;
+    ctx.beginPath();
+    ctx.arc(item.x, item.y, item.size / 2 + 5, 0, Math.PI * 2);
     ctx.stroke();
-    drawEmoji(item.type.emoji, item.x, item.y, item.size);
+
+    // 絵文字
+    ctx.font         = `${item.size}px serif`;
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(item.type.emoji, item.x, item.y);
+
+    // ラベル（フォントを絵文字と分けて明示的にセット）
     ctx.fillStyle    = 'rgba(30, 140, 30, 0.9)';
     ctx.font         = '10px sans-serif';
-    ctx.textAlign    = 'center';
     ctx.textBaseline = 'top';
     ctx.fillText(item.type.label, item.x, item.y + item.size / 2 + 4);
+
+    ctx.restore();
   }
 }
 
 function drawObstacles() {
   for (const obs of obstacles) {
-    ctx.beginPath();
-    ctx.arc(obs.x, obs.y, obs.size / 2 + 5, 0, Math.PI * 2);
+    ctx.save();
+
+    // 光輪（スタイルを beginPath より先にセット）
     ctx.strokeStyle = 'rgba(220, 60, 60, 0.55)';
     ctx.lineWidth   = 2.5;
+    ctx.beginPath();
+    ctx.arc(obs.x, obs.y, obs.size / 2 + 5, 0, Math.PI * 2);
     ctx.stroke();
-    drawEmoji(obs.type.emoji, obs.x, obs.y, obs.size);
+
+    // 絵文字
+    ctx.font         = `${obs.size}px serif`;
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(obs.type.emoji, obs.x, obs.y);
+
+    // ラベル（フォントを絵文字と分けて明示的にセット）
     ctx.fillStyle    = 'rgba(180, 30, 30, 0.9)';
     ctx.font         = '10px sans-serif';
-    ctx.textAlign    = 'center';
     ctx.textBaseline = 'top';
     ctx.fillText(obs.type.label, obs.x, obs.y + obs.size / 2 + 4);
+
+    ctx.restore();
   }
 }
 
