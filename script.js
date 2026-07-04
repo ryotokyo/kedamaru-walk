@@ -664,55 +664,49 @@ function drawEyes(cx, cy, R, isBlinking) {
 
 function drawItems() {
   for (const item of items) {
-    ctx.save();
-
-    // 光輪（スタイルを beginPath より先にセット）
+    // 光輪：strokeStyle を beginPath より前にセット（モバイル対策）
     ctx.strokeStyle = 'rgba(80, 210, 80, 0.55)';
     ctx.lineWidth   = 2.5;
     ctx.beginPath();
     ctx.arc(item.x, item.y, item.size / 2 + 5, 0, Math.PI * 2);
     ctx.stroke();
 
-    // 絵文字
+    // 絵文字：fillStyle を明示することでモバイルでの色ズレを防ぐ
+    ctx.fillStyle    = '#222';
     ctx.font         = `${item.size}px serif`;
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(item.type.emoji, item.x, item.y);
 
-    // ラベル（フォントを絵文字と分けて明示的にセット）
+    // ラベル
     ctx.fillStyle    = 'rgba(30, 140, 30, 0.9)';
     ctx.font         = '10px sans-serif';
     ctx.textBaseline = 'top';
     ctx.fillText(item.type.label, item.x, item.y + item.size / 2 + 4);
-
-    ctx.restore();
   }
 }
 
 function drawObstacles() {
   for (const obs of obstacles) {
-    ctx.save();
-
-    // 光輪（スタイルを beginPath より先にセット）
+    // 光輪：strokeStyle を beginPath より前にセット（モバイル対策）
     ctx.strokeStyle = 'rgba(220, 60, 60, 0.55)';
     ctx.lineWidth   = 2.5;
     ctx.beginPath();
     ctx.arc(obs.x, obs.y, obs.size / 2 + 5, 0, Math.PI * 2);
     ctx.stroke();
 
-    // 絵文字
+    // 絵文字：fillStyle を明示することでモバイルでの色ズレを防ぐ
+    ctx.fillStyle    = '#222';
     ctx.font         = `${obs.size}px serif`;
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(obs.type.emoji, obs.x, obs.y);
 
-    // ラベル（フォントを絵文字と分けて明示的にセット）
+    // ラベル
     ctx.fillStyle    = 'rgba(180, 30, 30, 0.9)';
     ctx.font         = '10px sans-serif';
     ctx.textBaseline = 'top';
     ctx.fillText(obs.type.label, obs.x, obs.y + obs.size / 2 + 4);
-
-    ctx.restore();
   }
 }
 
@@ -1196,6 +1190,14 @@ canvas.addEventListener('pointercancel', (e) => {
 // ================================================================
 
 try { highScore = parseInt(localStorage.getItem(HIGH_SCORE_KEY)) || 0; } catch (_) { highScore = 0; }
+
+// 絵文字フォントの事前ロード（iOS Safari はキャッシュがないと初回フレームで空になる）
+(function warmupEmojiFont() {
+  ctx.font      = '28px serif';
+  ctx.fillStyle = 'rgba(0,0,0,0)'; // 透明なので画面に見えない
+  const allEmoji = [...ITEM_TYPES, ...OBSTACLE_TYPES].map(t => t.emoji).join('');
+  ctx.fillText(allEmoji, 0, -100); // 画面外に描画してキャッシュだけ作る
+})();
 
 gamePhase    = 'title';
 keys         = { left: false, right: false };
